@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <header>
+        <title>TOTTI</title>
+        <link rel="stylesheet" type="text/css" href="/css/normalize.css">
+        <link rel="stylesheet" type="text/css" href="/css/style.css">
+        <script src="thoughts.txt"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+            var thoughtCardTemplate = "<div class=\"thoughtCards\"><p class=\"thoughts\">" + "" + "</p><b class=\"cardCode\">[]" + "" + "]</b></div>"
+            var thoughtsStorage = [];
+            var socket = io();
+            // submit thought function
+            function submitThought() {
+                var inputValue = document.getElementById("addThoughtInput").value;
+                socket.emit("newThought", {message: inputValue});
+                document.getElementById("addThoughtInput").value = "";
+            }
+            // when the user connect and get serve the index.html file
+            // request immediately the previous contents
+            socket.emit("initialContentRequest");
+            socket.on("initialContent", function(data) {
+                thoughtsStorage.push([data.message, data.code]);
+                console.log(thoughtsStorage);
+            });
+            // receive signal that all content is sent
+            socket.on("contentSent", function() {
+                // put content into div
+                for(i = 0;i < thoughtsStorage.length;i++) {
+                    document.getElementById("thoughtContainer").innerHTML += "\<div class=\"thoughtCards\"><p class=\"thoughts\">" + thoughtsStorage[i][0] + "</p><b class=\"cardCode\">[" + thoughtsStorage[i][1] + "]</b></div>";
+                }
+            });
+            // signal sent before content is refreshed
+            // reset variable and interface
+            socket.on("refreshSignal", function() {
+                thoughtsStorage = [];
+                document.getElementById("thoughtContainer").innerHTML = "";
+            });
+            // send alert to user for the new thought card code
+            socket.on("newCodeAlert", function(data) {
+                alert("The unique code for your thought is " + data.code);
+            })
+            // refresh content signal
+            socket.on("refreshContent", function(data) {
+                thoughtsStorage.push([data.message, data.code]);
+            });
+            socket.on("thoughtAdded", function(data) {
+                document.getElementById("thoughtContainer").innerHTML += "\<div class=\"thoughtCards\"><p class=\"thoughts\">" + data.message + "</p><b class=\"cardCode\">[" + data.code + "]</b></div>";
+            });
+        </script>
+    </header>
+    <body>
+        <div id="headBanner">
+            <p id="headBannerText"><b class="headBannerBold">T</b>houghts <b class="headBannerBold">O</b>f <b class="headBannerBold">T</b>he <b class="headBannerBold">I</b>nternet</p>
+
+            <input id="addThoughtInput" placeholder="Add your thoughts">
+            <button id="addThoughtButton" onclick="submitThought()">Submit</button>
+        </div>
+        <div id="thoughtContainer"></div>
+    </body>
+</html>
