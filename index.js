@@ -36,14 +36,14 @@ io.on("connection", function(socket) {
     });
     socket.on("newThought", function(data) {
         socket.emit("refreshSignal");
-        thoughtsTemp[0] += 1;
+        thoughtsTemp[0] = (parseInt(thoughtsTemp[0]) + 1).toString();
         thoughtsTemp.splice(1, 0, [data.message, thoughtsTemp[0].toString(16)]);
         console.log(thoughtsTemp);
         // signal for code alert
         socket.emit("newCodeAlert", {code: thoughtsTemp[0].toString(16)});
         // write to file for storage
         var fs = require('fs');
-        fs.writeFile("./assets/thoughts.txt", "[[" + thoughtsTemp.join("],[") + "]]", function(err) {
+        fs.writeFile("./assets/thoughts.txt", JSON.stringify(thoughtsTemp), function(err) {
         if(err) {
             return console.log(err);
         }
