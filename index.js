@@ -61,6 +61,6 @@ io.on("connection", function(socket) {
 });
 
 // tell server to listen on port (offline development)
-http.listen(app.get('port'), function() {
+http.listen(process.env.PORT || 3000, function() {
     console.log("listening on port " + app.get('port'));
 });
