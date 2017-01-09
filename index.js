@@ -36,11 +36,12 @@ io.on("connection", function(socket) {
     });
     socket.on("newThought", function(data) {
         socket.emit("refreshSignal");
-        thoughtsTemp[0] = (parseInt(thoughtsTemp[0]) + 1).toString();
+        thoughtsTemp[0] = (Number(thoughtsTemp[0]) + 1).toString();
         thoughtsTemp.splice(1, 0, [data.message, thoughtsTemp[0].toString(16)]);
         console.log(thoughtsTemp);
         // signal for code alert
-        socket.emit("newCodeAlert", {code: thoughtsTemp[0].toString(16)});
+        var codeSend = Number(thoughtsTemp[0]).toString(16);
+        socket.emit("newCodeAlert", {code: codeSend});
         // write to file for storage
         var fs = require('fs');
         fs.writeFile("./assets/thoughts.txt", JSON.stringify(thoughtsTemp), function(err) {

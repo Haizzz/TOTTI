@@ -27,7 +27,7 @@
             socket.on("contentSent", function() {
                 // put content into div
                 for(i = 0;i < thoughtsStorage.length;i++) {
-                    document.getElementById("thoughtContainer").innerHTML += "\<div class=\"thoughtCards\"><p class=\"thoughts\">" + thoughtsStorage[i][0] + "</p><b class=\"cardCode\">[" + thoughtsStorage[i][1] + "]</b></div>";
+                    document.getElementById("thoughtContainer").innerHTML += "\<div class=\"thoughtCards\"><p class=\"thoughts\">" + thoughtsStorage[i][0] + "</p><b class=\"cardCode\">[" + Number(thoughtsStorage[i][1]).toString(16) + "]</b></div>";
                 }
             });
             // signal sent before content is refreshed
@@ -43,9 +43,6 @@
             // refresh content signal
             socket.on("refreshContent", function(data) {
                 thoughtsStorage.push([data.message, data.code]);
-            });
-            socket.on("thoughtAdded", function(data) {
-                document.getElementById("thoughtContainer").innerHTML += "\<div class=\"thoughtCards\"><p class=\"thoughts\">" + data.message + "</p><b class=\"cardCode\">[" + data.code + "]</b></div>";
             });
         </script>
     </header>
