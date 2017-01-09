@@ -27,7 +27,7 @@
             socket.on("contentSent", function() {
                 // put content into div
                 for(i = 0;i < thoughtsStorage.length;i++) {
-                    document.getElementById("thoughtContainer").innerHTML += "\<div class=\"thoughtCards\"><p class=\"thoughts\">" + thoughtsStorage[i][0] + "</p><b class=\"cardCode\">[" + Number(thoughtsStorage[i][1]).toString(16) + "]</b></div>";
+                    document.getElementById("thoughtContainer").innerHTML += "\<div class=\"thoughtCards\"><p class=\"thoughts\">" + thoughtsStorage[i][0] + "</p><b class=\"cardCode\">[" + Number(thoughtsStorage[i][1]).toString() + "]</b></div>";
                 }
             });
             // signal sent before content is refreshed

@@ -37,10 +37,10 @@ io.on("connection", function(socket) {
     socket.on("newThought", function(data) {
         socket.emit("refreshSignal");
         thoughtsTemp[0] = (Number(thoughtsTemp[0]) + 1).toString();
-        thoughtsTemp.splice(1, 0, [data.message, thoughtsTemp[0].toString(16)]);
+        thoughtsTemp.splice(1, 0, [data.message, thoughtsTemp[0].toString()]);
         console.log(thoughtsTemp);
         // signal for code alert
-        var codeSend = Number(thoughtsTemp[0]).toString(16);
+        var codeSend = Number(thoughtsTemp[0]).toString();
         socket.emit("newCodeAlert", {code: codeSend});
         // write to file for storage
         var fs = require('fs');
